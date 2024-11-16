@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spellearn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="icon.svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+        }
+
+        .hexagon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .hexagon {
+            width: 30vw;
+            height: 36vw;
+            position: relative;
+            background: linear-gradient(145deg, #fde047 0%, #facc15 100%);
+            clip-path: polygon(50% 5%, 95% 27%, 95% 73%, 50% 95%, 5% 73%, 5% 27%);
+            min-width: 300px;
+            min-height: 360px;
+            max-width: 400px;
+            max-height: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .hexagon:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 60%;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 9999px;
+            background: #ffffff;
+            color: #1e293b;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .hexagon {
+                width: 80vw;
+                height: 96vw;
+                min-width: 280px;
+                min-height: 336px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hexagon-container">
+        <div class="hexagon">
+            <h1>Spellearn</h1>
+            <div class="button-container">
+                <a href="new.html">
+                    <button>New Set</button>
+                </a>
+                <a href="practice.html">
+                    <button>Practice</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
