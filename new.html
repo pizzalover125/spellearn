@@ -1,298 +1,323 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Spellearn - New Set</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="icon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.svg" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
 
-        body {
-            background: #f8fafc;
-        }
+      body {
+        background: #f8fafc;
+      }
 
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      }
+
+      .content-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        margin-top: 2rem;
+      }
+
+      h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      textarea {
+        width: 100%;
+        height: 300px;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        resize: vertical;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 9999px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .save-button {
+        background: #facc15;
+        color: #1e293b;
+      }
+
+      .back-button {
+        background: #e2e8f0;
+        color: #1e293b;
+      }
+
+      .delete-button {
+        background: #ef4444;
+        color: white;
+        margin-top: 1rem;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .message {
+        text-align: center;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        display: none;
+      }
+
+      .success {
+        background: #86efac;
+        color: #14532d;
+      }
+
+      .error {
+        background: #fecaca;
+        color: #7f1d1d;
+      }
+
+      .existing-sets {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e2e8f0;
+      }
+
+      .existing-sets h2 {
+        color: #1e293b;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .set-card {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .set-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .set-info {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+
+      @media (max-width: 768px) {
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        }
-
-        .content-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            margin-top: 2rem;
+          padding: 1rem;
         }
 
         h1 {
-            color: #1e293b;
-            font-size: 2rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        textarea {
-            width: 100%;
-            height: 300px;
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            resize: vertical;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
+          font-size: 1.5rem;
         }
 
         button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
         }
-
-        .save-button {
-            background: #facc15;
-            color: #1e293b;
-        }
-
-        .back-button {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-
-        .delete-button {
-            background: #ef4444;
-            color: white;
-            margin-top: 1rem;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .message {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            display: none;
-        }
-
-        .success {
-            background: #86efac;
-            color: #14532d;
-        }
-
-        .error {
-            background: #fecaca;
-            color: #7f1d1d;
-        }
-
-        .existing-sets {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .existing-sets h2 {
-            color: #1e293b;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .set-card {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .set-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .set-info {
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            button {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="content-box">
-            <h1>Create New Word Set</h1>
-            <input type="text" id="setName" placeholder="Enter set name..." />
-            <textarea id="wordList" placeholder="Enter your words here, one per line..."></textarea>
-            <div class="button-container">
-                <button class="back-button" onclick="window.location.href='index.html'">Back</button>
-                <button class="save-button" onclick="saveWords()">Save Words</button>
-            </div>
-            <div id="message" class="message"></div>
-
-            <div class="existing-sets">
-                <h2>Existing Sets</h2>
-                <div id="setsList"></div>
-                <button class="delete-button" onclick="deleteAllSets()">Delete All Sets</button>
-            </div>
+      <div class="content-box">
+        <h1>Create New Word Set</h1>
+        <input type="text" id="setName" placeholder="Enter set name..." />
+        <textarea
+          id="wordList"
+          placeholder="Enter your words here, one per line..."
+        ></textarea>
+        <div class="button-container">
+          <button
+            class="back-button"
+            onclick="window.location.href='index.html'"
+          >
+            Back
+          </button>
+          <button class="save-button" onclick="saveWords()">Save Words</button>
         </div>
+        <div id="message" class="message"></div>
+
+        <div class="existing-sets">
+          <h2>Existing Sets</h2>
+          <div id="setsList"></div>
+          <button class="delete-button" onclick="deleteAllSets()">
+            Delete All Sets
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        function saveWords() {
-            const textarea = document.getElementById('wordList');
-            const nameInput = document.getElementById('setName');
-            const message = document.getElementById('message');
-            const words = textarea.value.split('\n').filter(word => word.trim() !== '');
-            const setName = nameInput.value.trim();
+      function saveWords() {
+        const textarea = document.getElementById("wordList");
+        const nameInput = document.getElementById("setName");
+        const message = document.getElementById("message");
+        const words = textarea.value
+          .split("\n")
+          .filter((word) => word.trim() !== "");
+        const setName = nameInput.value.trim();
 
-            if (words.length === 0) {
-                showMessage('Please enter at least one word.', 'error');
-                return;
-            }
-
-            if (!setName) {
-                showMessage('Please enter a name for the set.', 'error');
-                return;
-            }
-
-            const existingSets = JSON.parse(localStorage.getItem('wordSets') || '[]');
-            const newSet = {
-                id: Date.now(),
-                name: setName,
-                words: words,
-                dateCreated: new Date().toISOString()
-            };
-
-            existingSets.push(newSet);
-            localStorage.setItem('wordSets', JSON.stringify(existingSets));
-
-            showMessage(`Successfully saved "${setName}" with ${words.length} words!`, 'success');
-            
-            textarea.value = '';
-            nameInput.value = '';
-            displaySets();
+        if (words.length === 0) {
+          showMessage("Please enter at least one word.", "error");
+          return;
         }
 
-        function showMessage(text, type) {
-            const message = document.getElementById('message');
-            message.textContent = text;
-            message.className = `message ${type}`;
-            message.style.display = 'block';
-
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 3000);
+        if (!setName) {
+          showMessage("Please enter a name for the set.", "error");
+          return;
         }
 
-        function deleteSet(id) {
-            const existingSets = JSON.parse(localStorage.getItem('wordSets') || '[]');
-            const updatedSets = existingSets.filter(set => set.id !== id);
-            localStorage.setItem('wordSets', JSON.stringify(updatedSets));
-            displaySets();
-            showMessage('Set deleted successfully!', 'success');
-        }
+        const existingSets = JSON.parse(
+          localStorage.getItem("wordSets") || "[]",
+        );
+        const newSet = {
+          id: Date.now(),
+          name: setName,
+          words: words,
+          dateCreated: new Date().toISOString(),
+        };
 
-        function deleteAllSets() {
-            if (confirm('Are you sure you want to delete all sets? This cannot be undone.')) {
-                localStorage.removeItem('wordSets');
-                displaySets();
-                showMessage('All sets deleted successfully!', 'success');
-            }
-        }
+        existingSets.push(newSet);
+        localStorage.setItem("wordSets", JSON.stringify(existingSets));
 
-        function displaySets() {
-            const setsList = document.getElementById('setsList');
-            const existingSets = JSON.parse(localStorage.getItem('wordSets') || '[]');
+        showMessage(
+          `Successfully saved "${setName}" with ${words.length} words!`,
+          "success",
+        );
 
-            setsList.innerHTML = '';
-
-            existingSets.forEach(set => {
-                const setCard = document.createElement('div');
-                setCard.className = 'set-card';
-                
-                const setHeader = document.createElement('div');
-                setHeader.className = 'set-header';
-                
-                const nameSpan = document.createElement('strong');
-                nameSpan.textContent = set.name;
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-button';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.style.margin = '0';
-                deleteBtn.style.padding = '0.5rem 1rem';
-                deleteBtn.onclick = () => deleteSet(set.id);
-                
-                setHeader.appendChild(nameSpan);
-                setHeader.appendChild(deleteBtn);
-                
-                const setInfo = document.createElement('div');
-                setInfo.className = 'set-info';
-                setInfo.textContent = `${set.words.length} words • Created ${new Date(set.dateCreated).toLocaleDateString()}`;
-                
-                setCard.appendChild(setHeader);
-                setCard.appendChild(setInfo);
-                setsList.appendChild(setCard);
-            });
-        }
-
-        // Display sets when page loads
+        textarea.value = "";
+        nameInput.value = "";
         displaySets();
+      }
+
+      function showMessage(text, type) {
+        const message = document.getElementById("message");
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = "block";
+
+        setTimeout(() => {
+          message.style.display = "none";
+        }, 3000);
+      }
+
+      function deleteSet(id) {
+        const existingSets = JSON.parse(
+          localStorage.getItem("wordSets") || "[]",
+        );
+        const updatedSets = existingSets.filter((set) => set.id !== id);
+        localStorage.setItem("wordSets", JSON.stringify(updatedSets));
+        displaySets();
+        showMessage("Set deleted successfully!", "success");
+      }
+
+      function deleteAllSets() {
+        if (
+          confirm(
+            "Are you sure you want to delete all sets? This cannot be undone.",
+          )
+        ) {
+          localStorage.removeItem("wordSets");
+          displaySets();
+          showMessage("All sets deleted successfully!", "success");
+        }
+      }
+
+      function displaySets() {
+        const setsList = document.getElementById("setsList");
+        const existingSets = JSON.parse(
+          localStorage.getItem("wordSets") || "[]",
+        );
+
+        setsList.innerHTML = "";
+
+        existingSets.forEach((set) => {
+          const setCard = document.createElement("div");
+          setCard.className = "set-card";
+
+          const setHeader = document.createElement("div");
+          setHeader.className = "set-header";
+
+          const nameSpan = document.createElement("strong");
+          nameSpan.textContent = set.name;
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "delete-button";
+          deleteBtn.textContent = "Delete";
+          deleteBtn.style.margin = "0";
+          deleteBtn.style.padding = "0.5rem 1rem";
+          deleteBtn.onclick = () => deleteSet(set.id);
+
+          setHeader.appendChild(nameSpan);
+          setHeader.appendChild(deleteBtn);
+
+          const setInfo = document.createElement("div");
+          setInfo.className = "set-info";
+          setInfo.textContent = `${set.words.length} words • Created ${new Date(set.dateCreated).toLocaleDateString()}`;
+
+          setCard.appendChild(setHeader);
+          setCard.appendChild(setInfo);
+          setsList.appendChild(setCard);
+        });
+      }
+
+      // Display sets when page loads
+      displaySets();
     </script>
-</body>
+  </body>
 </html>

@@ -1,446 +1,530 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Spellearn - Practice</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="icon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.svg" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
 
-        body {
-            background: #f8fafc;
-            margin: 0;
-        }
+      body {
+        background: #f8fafc;
+        margin: 0;
+      }
 
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      }
+
+      .practice-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+      }
+
+      .input-box {
+        margin-bottom: 2rem;
+        display: none;
+      }
+
+      textarea {
+        width: 100%;
+        height: 150px;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        resize: vertical;
+      }
+
+      .word-container {
+        margin: 2rem 0;
+        min-height: 100px;
+      }
+
+      .input-container {
+        margin: 2rem 0;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1.25rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      button {
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 9999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+      }
+
+      .play-button {
+        background: #facc15;
+        color: white;
+        flex: 1;
+      }
+
+      .check-button {
+        background: #22c55e;
+        color: white;
+        flex: 1;
+      }
+
+      .next-button {
+        background: #3b82f6;
+        color: white;
+        flex: 1;
+      }
+
+      .back-button {
+        background: #e2e8f0;
+        color: #1e293b;
+        width: 100%;
+        margin-top: 2rem;
+      }
+
+      .start-button {
+        background: #facc15;
+        color: #1e293b;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .feedback {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+      }
+
+      .correct {
+        background: #86efac;
+        color: #14532d;
+      }
+
+      .incorrect {
+        background: #fecaca;
+        color: #7f1d1d;
+      }
+
+      .stats {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+      }
+
+      #practiceArea {
+        display: none;
+        text-align: center;
+      }
+
+      .set-selection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 2rem;
+        margin: 0 auto;
+      }
+
+      .set-card {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+        width: 100%;
+      }
+
+      .set-card:hover {
+        border-color: #facc15;
+        transform: translateY(-2px);
+      }
+
+      .set-name {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .set-info {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+
+      .progress-container {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);  
-        }
-
-        .practice-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
+          padding: 1rem;
         }
 
         h1 {
-            color: #1e293b;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-        }
-
-        .input-box {
-            margin-bottom: 2rem;
-            display: none;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            resize: vertical;
-        }
-
-        .word-container {
-            margin: 2rem 0;
-            min-height: 100px;
-        }
-
-        .input-container {
-            margin: 2rem 0;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            max-width: 300px;
-            padding: 0.75rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1.25rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
+          font-size: 1.5rem;
         }
 
         button {
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 9999px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
+          padding: 0.4rem 1rem;
+          font-size: 0.8rem;
         }
 
-        .play-button {
-            background: #facc15;
-            color: #1e293b;
-            flex: 1;
+        .button-container {
+          flex-direction: row;
+          flex-wrap: nowrap;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .button-container {
+          flex-direction: column;
         }
 
-        .check-button {
-            background: #22c55e;
-            color: white;
-            flex: 1;
+        button {
+          width: 100%;
         }
-
-        .next-button {
-            background: #3b82f6;
-            color: white;
-            flex: 1;
-        }
-
-        .back-button {
-            background: #e2e8f0;
-            color: #1e293b;
-            width: 100%;
-            margin-top: 2rem;
-        }
-
-        .start-button {
-            background: #facc15;
-            color: #1e293b;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .feedback {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-        }
-
-        .correct {
-            background: #86efac;
-            color: #14532d;
-        }
-
-        .incorrect {
-            background: #fecaca;
-            color: #7f1d1d;
-        }
-
-        .stats {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 0.5rem;
-        }
-
-        #practiceArea {
-            display: none;
-            text-align: center;
-        }
-
-        .set-selection {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
-            gap: 1rem;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 2rem;
-            margin: 0 auto; 
-        }
-
-
-        .set-card {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-            width: 100%;
-        }
-
-        .set-card:hover {
-            border-color: #facc15;
-            transform: translateY(-2px);
-        }
-
-        .set-name {
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-
-        .set-info {
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        .progress-container {
-            margin: 1rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            button {
-                padding: 0.4rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .button-container {
-                flex-direction: row;
-                flex-wrap: nowrap;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .button-container {
-                flex-direction: column;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="practice-box">
-            <h1>Spelling Practice</h1>
+      <div class="practice-box">
+        <h1>Spelling Practice</h1>
 
-            <div id="inputBox" class="input-box">
-                <textarea id="wordInput" placeholder="Enter your words here, one per line..."></textarea>
-                <button class="start-button" onclick="startFromInput()">Start Practice</button>
-            </div>
-
-            <div id="setSelection" class="set-selection"></div>
-
-            <div id="practiceArea">
-                <div class="input-container">
-                    <input type="text" id="spellingInput" placeholder="Type the word..." onkeypress="checkEnter(event)">
-                </div>
-                <div class="button-container">
-                    <button class="check-button" onclick="checkSpelling()">Check</button>
-                    <button class="next-button" onclick="nextWord()">Next Word</button>
-                    <button class="play-button" onclick="speakCurrentWord()">Play Word</button>
-                </div>
-                <div id="feedback" class="feedback" style="display: none;"></div>
-                <button class="back-button" onclick="window.location.href='index.html'">Back to Menu</button>
-            </div>
+        <div id="inputBox" class="input-box">
+          <textarea
+            id="wordInput"
+            placeholder="Enter your words here, one per line..."
+            autocomplete="off"
+          ></textarea>
+          <button class="start-button" onclick="startFromInput()">
+            Start Practice
+          </button>
         </div>
+
+        <div id="setSelection" class="set-selection"></div>
+
+        <div id="practiceArea">
+          <div class="input-container">
+            <input
+              type="text"
+              id="spellingInput"
+              placeholder="Type the word..."
+              onkeypress="checkEnter(event)"
+            />
+          </div>
+          <div class="button-container">
+            <button class="check-button" onclick="checkSpelling()">
+              Check
+            </button>
+            <button class="next-button" onclick="nextWord()">Next Word</button>
+            <button class="play-button" onclick="speakCurrentWord()">
+              Play Word
+            </button>
+          </div>
+          <div id="feedback" class="feedback" style="display: none"></div>
+          <button
+            class="back-button"
+            onclick="window.location.href='index.html'"
+          >
+            Back to Menu
+          </button>
+        </div>
+      </div> 
     </div>
 
     <script>
-        let currentSet = [];
-        let currentWordIndex = 0;
-        let correctCount = 0;
-        let speechRate = 0.75;
-        let currentSetData = null;
-        
-        const synth = window.speechSynthesis;
-        
-        window.onload = function() {
-            loadSets();
-        };
+      let currentSet = [];
+      let currentWordIndex = 0;
+      let speechRate = 0.75;
+      let currentSetData = null;
 
-        function loadSets() {
-            try {
-                const sets = JSON.parse(localStorage.getItem('wordSets') || '[]');
-                if (sets.length > 0) {
-                    setupWordSets(sets);
-                } else {
-                    showInputBox();
-                }
-            } catch (e) {
-                showInputBox();
-            }
+      const synth = window.speechSynthesis;
+
+      window.onload = function () {
+        loadSets();
+      };
+
+      function loadSets() {
+        try {
+          const sets = JSON.parse(localStorage.getItem("wordSets") || "[]");
+          if (sets.length > 0) {
+            setupWordSets(sets);
+          } else {
+            showInputBox();
+          }
+        } catch (e) {
+          showInputBox();
+        }
+      }
+
+      function showInputBox() {
+        document.getElementById("setSelection").style.display = "none";
+        document.getElementById("inputBox").style.display = "block";
+      }
+
+      function setupWordSets(sets) {
+        const selectionArea = document.getElementById("setSelection");
+        selectionArea.innerHTML = "";
+
+        sets.forEach((set) => {
+          const setCard = document.createElement("div");
+          setCard.className = "set-card";
+          setCard.onclick = () => startPractice(set);
+
+          const setName = document.createElement("div");
+          setName.className = "set-name";
+          setName.textContent = set.name;
+
+          const setInfo = document.createElement("div");
+          setInfo.className = "set-info";
+          setInfo.textContent = `${set.words.length} words • Created ${new Date(set.dateCreated).toLocaleDateString()}`;
+
+          setCard.appendChild(setName);
+          setCard.appendChild(setInfo);
+          selectionArea.appendChild(setCard);
+        });
+      }
+
+      function startFromInput() {
+        const textarea = document.getElementById("wordInput");
+        const words = textarea.value
+          .split("\n")
+          .filter((word) => word.trim() !== "");
+
+        if (words.length === 0) {
+          alert("Please enter at least one word.");
+          return;
         }
 
-        function showInputBox() {
-            document.getElementById('setSelection').style.display = 'none';
-            document.getElementById('inputBox').style.display = 'block';
+        startPractice({
+          name: "Custom Set",
+          words: words,
+          dateCreated: new Date().toISOString(),
+        });
+      }
+
+      function startPractice(setData) {
+        currentSetData = setData;
+        currentSet = [...setData.words];
+        currentWordIndex = 0;
+        shuffleArray(currentSet);
+
+        document.getElementById("inputBox").style.display = "none";
+        document.getElementById("setSelection").style.display = "none";
+        document.getElementById("practiceArea").style.display = "block";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("spellingInput").value = "";
+        document.getElementById("correct").textContent = "0";
+        document.getElementById("currentSetName").textContent = setData.name;
+        document.getElementById("spellingInput").disabled = false;
+
+        updateProgress();
+        speakCurrentWord();
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function speakCurrentWord() {
+        if (currentSet.length === 0) return;
+
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(
+          currentSet[currentWordIndex],
+        );
+        utterance.rate = speechRate;
+        utterance.pitch = 1;
+        synth.speak(utterance);
+      }
+
+      function checkSpelling() {
+        const input = document.getElementById("spellingInput");
+        const feedback = document.getElementById("feedback");
+        const checkButton = document.querySelector(".check-button");
+        const currentWord = currentSet[currentWordIndex].trim().toLowerCase();
+        const userInput = input.value.trim().toLowerCase();
+
+        let wordProgress = JSON.parse(
+          localStorage.getItem("wordProgress") || "{}",
+        );
+
+        if (!wordProgress[currentWord]) {
+          wordProgress[currentWord] = {
+            score: 0,
+            set: getCurrentSetName(),
+            lastAttemptDate: new Date().toISOString(),
+          };
         }
 
-        function setupWordSets(sets) {
-            const selectionArea = document.getElementById('setSelection');
-            selectionArea.innerHTML = '';
-            
-            sets.forEach(set => {
-                const setCard = document.createElement('div');
-                setCard.className = 'set-card';
-                setCard.onclick = () => startPractice(set);
-                
-                const setName = document.createElement('div');
-                setName.className = 'set-name';
-                setName.textContent = set.name;
-                
-                const setInfo = document.createElement('div');
-                setInfo.className = 'set-info';
-                setInfo.textContent = `${set.words.length} words • Created ${new Date(set.dateCreated).toLocaleDateString()}`;
-                
-                setCard.appendChild(setName);
-                setCard.appendChild(setInfo);
-                selectionArea.appendChild(setCard);
-            });
+        if (userInput === currentWord) {
+          feedback.textContent = `Correct! The word was: ${currentSet[currentWordIndex]}`;
+          feedback.className = "feedback correct";
+
+          localStorage.setItem(
+            "lifetimeCorrect",
+            (
+              parseInt(localStorage.getItem("lifetimeCorrect") || "0") + 1
+            ).toString(),
+          );
+
+          wordProgress[currentWord].score++;
+
+          if (wordProgress[currentWord].score >= 3) {
+            feedback.textContent += " 🌟 Word Mastered!";
+          }
+        } else {
+          feedback.textContent = `Incorrect. The word was: ${currentSet[currentWordIndex]}`;
+          feedback.className = "feedback incorrect";
+
+          localStorage.setItem(
+            "lifetimeIncorrect",
+            (
+              parseInt(localStorage.getItem("lifetimeIncorrect") || "0") + 1
+            ).toString(),
+          );
+
+          wordProgress[currentWord].score--;
+
+          if (wordProgress[currentWord].score < -1) {
+            feedback.textContent += " 📚 Keep practicing!";
+          }
         }
 
-        function startFromInput() {
-            const textarea = document.getElementById('wordInput');
-            const words = textarea.value.split('\n').filter(word => word.trim() !== '');
-            
-            if (words.length === 0) {
-                alert('Please enter at least one word.');
-                return;
-            }
-            
-            startPractice({
-                name: 'Custom Set',
-                words: words,
-                dateCreated: new Date().toISOString()
-            });
+        wordProgress[currentWord].lastAttemptDate = new Date().toISOString();
+
+        localStorage.setItem("wordProgress", JSON.stringify(wordProgress));
+
+        feedback.style.display = "block";
+        input.disabled = true;
+        checkButton.disabled = true;
+      }
+
+      function getWordStatus(word) {
+        const wordProgress = JSON.parse(
+          localStorage.getItem("wordProgress") || "{}",
+        );
+        if (!wordProgress[word]) return "new";
+
+        const score = wordProgress[word].score;
+        if (score >= 3) return "mastered";
+        if (score < -1) return "struggle";
+        return "learning";
+      }
+
+      function getCurrentSetName() {
+        return currentSetData["name"];
+      }
+
+      function nextWord() {
+        const input = document.getElementById("spellingInput");
+        const feedback = document.getElementById("feedback");
+        const checkButton = document.querySelector(".check-button");
+
+        currentWordIndex++;
+        if (currentWordIndex >= currentSet.length) {
+          currentWordIndex = 0;
+          shuffleArray(currentSet);
         }
 
-        function startPractice(setData) {
-            currentSetData = setData;
-            currentSet = [...setData.words];
-            currentWordIndex = 0;
-            correctCount = 0;
-            shuffleArray(currentSet);
-            
-            document.getElementById('inputBox').style.display = 'none';
-            document.getElementById('setSelection').style.display = 'none';
-            document.getElementById('practiceArea').style.display = 'block';
-            document.getElementById('feedback').style.display = 'none';
-            document.getElementById('spellingInput').value = '';
-            document.getElementById('correct').textContent = '0';
-            document.getElementById('currentSetName').textContent = setData.name;
-            document.getElementById('spellingInput').disabled = false;
-            updateProgress();
-            speakCurrentWord();
-        }
+        input.value = "";
+        input.disabled = false;
+        checkButton.disabled = false;
+        feedback.style.display = "none";
+        updateProgress();
+        input.focus();
+        speakCurrentWord();
+      }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+      function updateProgress() {
+        document.getElementById("progress").textContent =
+          `${currentWordIndex + 1}/${currentSet.length}`;
+      }
 
-        function speakCurrentWord() {
-            if (currentSet.length === 0) return;
-            
-            synth.cancel();
-            const utterance = new SpeechSynthesisUtterance(currentSet[currentWordIndex]);
-            utterance.rate = speechRate;
-            utterance.pitch = 1;
-            synth.speak(utterance);
+      function checkEnter(event) {
+        if (event.key === "Enter") {
+          const input = document.getElementById("spellingInput");
+          if (!input.disabled) {
+            checkSpelling();
+          } else {
+            nextWord();
+          }
         }
-
-        function checkSpelling() {
-            const input = document.getElementById('spellingInput');
-            const feedback = document.getElementById('feedback');
-            
-            if (input.value.trim().toLowerCase() === currentSet[currentWordIndex].trim().toLowerCase()) {
-                feedback.textContent = `Correct! The word was: ${currentSet[currentWordIndex]}`;
-                feedback.className = 'feedback correct';
-                correctCount++;
-            } else {
-                feedback.textContent = `Incorrect. The word was: ${currentSet[currentWordIndex]}`;
-                feedback.className = 'feedback incorrect';
-            }
-            
-            feedback.style.display = 'block';
-            document.getElementById('correct').textContent = correctCount;
-            input.disabled = true;
-        }
-
-        function nextWord() {
-            const input = document.getElementById('spellingInput');
-            const feedback = document.getElementById('feedback');
-            
-            currentWordIndex++;
-            if (currentWordIndex >= currentSet.length) {
-                currentWordIndex = 0;
-                shuffleArray(currentSet);
-            }
-            
-            input.value = '';
-            input.disabled = false;
-            feedback.style.display = 'none';
-            updateProgress();
-            input.focus();
-            speakCurrentWord();
-        }
-
-        function updateProgress() {
-            document.getElementById('progress').textContent = 
-                `${currentWordIndex + 1}/${currentSet.length}`;
-        }
-
-        function checkEnter(event) {
-            if (event.key === 'Enter') {
-                const input = document.getElementById('spellingInput');
-                if (!input.disabled) {
-                    checkSpelling();
-                } else {
-                    nextWord();
-                }
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>

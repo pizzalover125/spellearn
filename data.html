@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Spellearn - Analytics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.svg" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #f8fafc;
+        margin: 0;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      }
+
+      .dashboard {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 1000px;
+      }
+
+      h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+
+      .chart-container {
+        margin: 2rem 0;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+      }
+
+      .word-list {
+        margin-top: 2rem;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .word-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .word-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .status-mastered {
+        background: #86efac;
+        color: #14532d;
+      }
+
+      .status-learning {
+        background: #fde68a;
+        color: #854d0e;
+      }
+
+      .status-struggle {
+        background: #fecaca;
+        color: #7f1d1d;
+      }
+
+      .status-new {
+        background: #e2e8f0;
+        color: #1e293b;
+      }
+
+      .back-button {
+        background: #e2e8f0;
+        color: #1e293b;
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 9999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 2rem;
+      }
+
+      .back-button:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .dashboard {
+          padding: 1rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dashboard">
+        <h1>Learning Progress</h1>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalWords">0</div>
+            <div class="stat-label">Total Words</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="masteredWords">0</div>
+            <div class="stat-label">Mastered Words</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="accuracy">0%</div>
+            <div class="stat-label">Overall Accuracy</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="streak">0</div>
+            <div class="stat-label">Current Streak</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="progressChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="setProgressChart"></canvas>
+        </div>
+
+        <h2 style="margin: 2rem 0 1rem">Word Status</h2>
+        <div id="wordList" class="word-list"></div>
+
+        <button class="back-button" onclick="window.location.href='index.html'">
+          Back to Menu
+        </button>
+      </div>
+    </div>
+
+    <script>
+      window.onload = function () {
+        loadData();
+      };
+
+      function loadData() {
+        const wordProgress = JSON.parse(
+          localStorage.getItem("wordProgress") || "{}",
+        );
+        const lifetimeCorrect = parseInt(
+          localStorage.getItem("lifetimeCorrect") || "0",
+        );
+        const lifetimeIncorrect = parseInt(
+          localStorage.getItem("lifetimeIncorrect") || "0",
+        );
+
+        const totalWords = Object.keys(wordProgress).length;
+        const masteredWords = Object.values(wordProgress).filter(
+          (word) => word.score >= 3,
+        ).length;
+        const accuracy =
+          lifetimeCorrect + lifetimeIncorrect === 0
+            ? 0
+            : Math.round(
+                (lifetimeCorrect / (lifetimeCorrect + lifetimeIncorrect)) * 100,
+              );
+
+        document.getElementById("totalWords").textContent = totalWords;
+        document.getElementById("masteredWords").textContent = masteredWords;
+        document.getElementById("accuracy").textContent = `${accuracy}%`;
+
+        const statusCounts = {
+          mastered: 0,
+          learning: 0,
+          struggle: 0,
+          new: 0,
+        };
+
+        Object.values(wordProgress).forEach((word) => {
+          if (word.score >= 3) statusCounts.mastered++;
+          else if (word.score < -1) statusCounts.struggle++;
+          else if (word.score === 0) statusCounts.new++;
+          else statusCounts.learning++;
+        });
+
+        const progressCtx = document
+          .getElementById("progressChart")
+          .getContext("2d");
+        new Chart(progressCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["Mastered", "Learning", "Struggling", "New"],
+            datasets: [
+              {
+                data: [
+                  statusCounts.mastered,
+                  statusCounts.learning,
+                  statusCounts.struggle,
+                  statusCounts.new,
+                ],
+                backgroundColor: ["#86efac", "#fde68a", "#fecaca", "#e2e8f0"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              title: {
+                display: true,
+                text: "Word Status Distribution",
+              },
+            },
+          },
+        });
+
+        const setProgress = {};
+        Object.entries(wordProgress).forEach(([word, data]) => {
+          if (!setProgress[data.set]) {
+            setProgress[data.set] = {
+              total: 0,
+              mastered: 0,
+            };
+          }
+          setProgress[data.set].total++;
+          if (data.score >= 3) {
+            setProgress[data.set].mastered++;
+          }
+        });
+
+        const setLabels = Object.keys(setProgress);
+        const setData = Object.values(setProgress).map(
+          (set) => (set.mastered / set.total) * 100,
+        );
+
+        const setCtx = document
+          .getElementById("setProgressChart")
+          .getContext("2d");
+        new Chart(setCtx, {
+          type: "bar",
+          data: {
+            labels: setLabels,
+            datasets: [
+              {
+                label: "Mastery Progress (%)",
+                data: setData,
+                backgroundColor: "#93c5fd",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: "Set Progress",
+              },
+            },
+          },
+        });
+
+        const wordList = document.getElementById("wordList");
+        Object.entries(wordProgress)
+          .sort(([, a], [, b]) => b.score - a.score)
+          .forEach(([word, data]) => {
+            const wordItem = document.createElement("div");
+            wordItem.className = "word-item";
+
+            const wordText = document.createElement("span");
+            wordText.textContent = word;
+
+            const wordStatus = document.createElement("span");
+            wordStatus.className = "word-status";
+
+            if (data.score >= 3) {
+              wordStatus.textContent = "Mastered";
+              wordStatus.classList.add("status-mastered");
+            } else if (data.score < -1) {
+              wordStatus.textContent = "Struggling";
+              wordStatus.classList.add("status-struggle");
+            } else if (data.score === 0) {
+              wordStatus.textContent = "New/Even";
+              wordStatus.classList.add("status-new");
+            } else {
+              wordStatus.textContent = "Learning";
+              wordStatus.classList.add("status-learning");
+            }
+
+            wordItem.appendChild(wordText);
+            wordItem.appendChild(wordStatus);
+            wordList.appendChild(wordItem);
+          });
+      }
+    </script>
+  </body>
+</html>
